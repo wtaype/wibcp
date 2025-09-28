@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WiBCP - Herramienta Call Center</title>
+<meta name="description" content="MIcp - Herramienta para detección automática de voz y utilidades como notepad. Optimiza tus procesos de call center con una plataforma moderna.">
+<meta name="keywords" content="call center, detección de voz, notepad, productividad, MIcp">
+
+<link href="/wibcp/v11/vite.svg" rel="icon" type="image/x-icon">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css">
+  <script type="module" crossorigin src="/wibcp/v11/assets/index-C8FpNaPc.js"></script>
+  <link rel="stylesheet" crossorigin href="/wibcp/v11/assets/index-BXgJ1BNQ.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="glass-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-headset"></i>
+                    <h1>WiBCP</h1>
+                  <p>"Más que Atención, una Experiencia"</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Timer and Configuration Section -->
+            <section class="main-grid">
+                <!-- Left Side: Timer (65%) -->
+                <div class="timer-section glass-card">
+                    <div class="timer-container">
+                        <div class="timer-circle">
+                            <svg class="progress-ring" width="200" height="200">
+                                <circle class="progress-ring-circle" cx="100" cy="100" r="80" 
+                                        stroke-width="8" fill="transparent"/>
+                            </svg>
+                            <div class="timer-display">
+                                <span id="timerValue">60</span>
+                                <small>segundos</small>
+                            </div>
+                        </div>
+                        <div class="timer-status">
+                            <p id="timerStatus">Listo para iniciar</p>
+                        </div>
+                        <div class="timer-controls">
+                            <button id="startTimer" class="btn-primary">
+                                <i class="fas fa-play"></i>
+                                <span>Iniciar</span>
+                            </button>
+                            <button id="stopTimer" class="btn-warning">
+                                <i class="fas fa-stop"></i>
+                                <span>Detener</span>
+                            </button>
+                            <button id="resetTimer" class="btn-secondary">
+                                <i class="fas fa-refresh"></i>
+                                <span>Reset</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Side: Configuration and History (35%) -->
+                <div class="config-section glass-card">
+                    <!-- Configuration -->
+                    <div class="config-panel">
+                        <h3><i class="fas fa-cog"></i> Configuración</h3>
+                        
+                        <div class="detection-controls">
+                            <button id="toggleDetection" class="btn-detection">
+                                <i class="fas fa-microphone"></i>
+                                <span>Detección Auto</span>
+                            </button>
+                        </div>
+
+                        <div class="phrases-info">
+                            <div class="phrases-group">
+                                <h4><i class="fas fa-play-circle text-success"></i> Activar</h4>
+                                <div id="startPhrasesList" class="phrases-display">
+                                    <!-- Dynamic content -->
+                                </div>
+                            </div>
+                            <div class="phrases-group">
+                                <h4><i class="fas fa-stop-circle text-danger"></i> Detener</h4>
+                                <div id="stopPhrasesList" class="phrases-display">
+                                    <!-- Dynamic content -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History -->
+                    <div class="history-panel">
+                        <h3><i class="fas fa-history"></i> Historial de Esperas</h3>
+                        <div id="historyList" class="history-list">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Genesys Cloud Section -->
+            <section class="genesys-section glass-card">
+                <h3><i class="fas fa-cloud"></i> Genesys Cloud</h3>
+                <div class="genesys-container">
+                    <div class="genesys-input-group">
+                        <input type="url" id="genesysUrl" class="genesys-input" placeholder="https://your-genesys-domain.com" value="">
+                        <button id="openGenesys" class="btn-primary genesys-btn">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Abrir Genesys Cloud</span>
+                        </button>
+                    </div>
+                    <div class="genesys-info">
+                        <small><i class="fas fa-info-circle"></i> Se abrirá en ventana optimizada para agentes</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notes and Images Section -->
+            <section class="content-grid">
+                <!-- Notes (40%) -->
+                <div class="notes-section glass-card">
+                    <h3><i class="fas fa-sticky-note"></i> Notas Rápidas</h3>
+                    <div class="notes-container">
+                        <textarea id="notesArea" placeholder="Escribe notas rápidas..."></textarea>
+                        <div class="save-indicator">
+                            <span id="saveStatus">Guardado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images (60%) -->
+                <div class="images-section glass-card">
+                    <h3><i class="fas fa-images"></i> Imágenes</h3>
+                    <div class="image-boxes">
+                        <div class="image-box" data-slot="1">
+                            <div class="image-dropzone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Imagen 1</p>
+                                <small>Pegar, Arrastrar o Subir</small>
+                            </div>
+                            <input type="file" class="image-input" accept="image/*">
+                            <div class="image-preview"></div>
+                            <div class="image-controls">
+                                <button class="btn-save" onclick="app.saveImage(1)">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="btn-delete" onclick="app.deleteImage(1)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <a class="btn-open image-link" data-slot="1" href="#" target="_blank" style="display: none;">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="image-box" data-slot="2">
+                            <div class="image-dropzone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Imagen 2</p>
+                                <small>Pegar, Arrastrar o Subir</small>
+                            </div>
+                            <input type="file" class="image-input" accept="image/*">
+                            <div class="image-preview"></div>
+                            <div class="image-controls">
+                                <button class="btn-save" onclick="app.saveImage(2)">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="btn-delete" onclick="app.deleteImage(2)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <a class="btn-open image-link" data-slot="2" href="#" target="_blank" style="display: none;">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="image-box" data-slot="3">
+                            <div class="image-dropzone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Imagen 3</p>
+                                <small>Pegar, Arrastrar o Subir</small>
+                            </div>
+                            <input type="file" class="image-input" accept="image/*">
+                            <div class="image-preview"></div>
+                            <div class="image-controls">
+                                <button class="btn-save" onclick="app.saveImage(3)">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="btn-delete" onclick="app.deleteImage(3)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <a class="btn-open image-link" data-slot="3" href="#" target="_blank" style="display: none;">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="image-box" data-slot="4">
+                            <div class="image-dropzone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Imagen 4</p>
+                                <small>Pegar, Arrastrar o Subir</small>
+                            </div>
+                            <input type="file" class="image-input" accept="image/*">
+                            <div class="image-preview"></div>
+                            <div class="image-controls">
+                                <button class="btn-save" onclick="app.saveImage(4)">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="btn-delete" onclick="app.deleteImage(4)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <a class="btn-open image-link" data-slot="4" href="#" target="_blank" style="display: none;">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Global Controls -->
+            <section class="global-controls">
+                <button id="clearAllData" class="btn-danger">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Eliminar Todos los Datos</span>
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <div class="container">
+            <p>Creado con ❤️ by <a class="ftx lkme" href="https://wtaype.github.io/" target="_blank">@wilder.taype</a> 2025 - <span class="wty">2025</span> | <a href="#about">Acerca del app</a> | Actualizado: 28/09/2025, 14:03:08</p>
+        </div>
+    </footer>
+
+    <!-- JS Files -->
+</body>
+</html>
