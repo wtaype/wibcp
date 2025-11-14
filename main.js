@@ -1,12 +1,6 @@
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import $ from 'jquery';
 
-/*
-=== WIBCP - Core Application & Timer System ===
-Main application class with timer functionality and browser detection
-Enhanced version by @wtaype - 2025
-*/
-
 class MIBCPApp {
     constructor() {
         // Core properties
@@ -96,17 +90,17 @@ class MIBCPApp {
         
         if (this.isTimerRunning) {
             // Show countdown in title - SUPER USEFUL!
-            newTitle = `⏱️ ${this.remainingSeconds}s - ${this.originalTitle}`;
+            newTitle = `Tiempo: ${this.remainingSeconds}seg - ${this.originalTitle}`;
             
             if (this.remainingSeconds <= 10) {
                 newTitle = `🔥 ${this.remainingSeconds}s - ${this.originalTitle}`;
             }
         } else if (!this.isRecognitionActive && this.browser !== 'chrome') {
             // Microphone available but not active
-            newTitle = `🎤 Listo - ${this.originalTitle}`;
+            newTitle = `🏅 Preparado - ${this.originalTitle}`;
         } else if (this.isRecognitionActive) {
             // Microphone active and listening
-            newTitle = `🎤 Escuchando - ${this.originalTitle}`;
+            newTitle = `🎧 Llamadas - ${this.originalTitle}`;
         } else if (this.browser === 'chrome') {
             // Chrome detected - suggest better browser
             newTitle = `Estas en Chrome! - ${this.originalTitle}`;
@@ -258,10 +252,9 @@ class MIBCPApp {
         const warningHtml = `
             <div class="smart-browser-warning glass-card" id="smartBrowserWarning">
                 <div class="warning-content">
-                    <div class="warning-icon">⚠️</div>
+                    <div class="warning-icon">&#9888;&#65039;</div>
                     <h3>Te recomiendo Edge para esta función </h3>
-                    <p><strong>En Chrome:</strong> puedes usar manualmente</p>
-                    
+                    <p><strong>En Chrome:</strong> puedes usar manualmente</p>                    
                     <div class="recommendation">
                         <div class="browser-setup">
                             <div class="browser-item">
@@ -273,8 +266,7 @@ class MIBCPApp {
                                 <span>Edge: WIBCP (contador + detección)</span>
                             </div>
                         </div>
-                    </div>
-                    
+                    </div>                    
                     <div class="warning-actions">
                         <button onclick="app.openInEdge()" class="btn-primary">
                             <i class="fab fa-edge"></i> Abrir en Edge
@@ -282,8 +274,7 @@ class MIBCPApp {
                         <button onclick="app.dismissWarning()" class="btn-secondary">
                             Entendido
                         </button>
-                    </div>
-                    
+                    </div>                    
                     <div class="auto-dismiss-counter">
                         Se cerrará automáticamente en <span id="dismissCounter">10</span>s
                     </div>
@@ -305,7 +296,7 @@ class MIBCPApp {
             }
         }, 1000);
         
-        console.log('⚠️ Smart Chrome warning shown (10s auto-dismiss)');
+        console.log('&#9888;&#65039; Smart Chrome warning shown (10s auto-dismiss)');
     }
     
     dismissWarning() {
@@ -350,7 +341,7 @@ class MIBCPApp {
                 console.error('Failed to start recognition:', e);
                 this.isRecognitionActive = false;
                 this.detectionEnabled = false;
-                this.showMessage('❌ Error al iniciar reconocimiento', 'error');
+                this.showMessage('&#10060; Error al iniciar reconocimiento', 'error');
             }
         } else {
             this.recognition.stop();
@@ -400,11 +391,11 @@ class MIBCPApp {
         );
         
         if (startMatch && !this.isTimerRunning) {
-            console.log('✅ Start trigger detected:', transcript);
+            console.log('&#9989; Start trigger detected:', transcript);
             this.startTimer();
             this.showMessage(`🎯 "${transcript}" detectado`, 'success');
         } else if (stopMatch && this.isTimerRunning) {
-            console.log('⏹️ Stop trigger detected:', transcript);
+            console.log('&#9209;&#65039; Stop trigger detected:', transcript);
             this.stopTimer();
             this.showMessage(`🎯 "${transcript}" detectado`, 'success');
         }
@@ -425,7 +416,7 @@ class MIBCPApp {
         this.remainingSeconds = 60;
         this.startTime = new Date();
         
-        $('#timerStatus').text('Contando tiempo...');
+        $('#timerStatus').text('Iniciando el conteo...');
         
         this.currentTimer = setInterval(() => {
             this.remainingSeconds--;
@@ -437,9 +428,9 @@ class MIBCPApp {
             }
         }, 1000);
         
-        this.showMessage('⏱️ Timer iniciado', 'success');
+        this.showMessage('&#9201;&#65039; Timer iniciado', 'success');
         this.updateDynamicTitle();
-        console.log('⏱️ Timer started:', this.startTime.toISOString());
+        console.log('&#9201;&#65039; Timer started:', this.startTime.toISOString());
     }
     
     updateTimerDisplay() {
@@ -463,14 +454,14 @@ class MIBCPApp {
     
     finishTimer() {
         this.stopTimer();
-        this.showMessage('⏰ ¡Tiempo completado!', 'warning');
+        this.showMessage('&#9200; &#161;Tiempo completado!', 'warning');
         
         // Enhanced visual and audio notification
         $('body').addClass('timer-finished');
         setTimeout(() => $('body').removeClass('timer-finished'), 3000);
         
         // Flash title for attention
-        document.title = '🔥 ¡COMPLETADO! - ' + this.originalTitle;
+        document.title = '🔥 &#161;COMPLETADO! - ' + this.originalTitle;
         setTimeout(() => {
             this.updateDynamicTitle();
         }, 3000);
@@ -482,14 +473,11 @@ class MIBCPApp {
         try {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
+            const gainNode = audioContext.createGain();            
             oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
+            gainNode.connect(audioContext.destination);            
             oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
+            oscillator.type = 'sine';            
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
@@ -506,19 +494,18 @@ class MIBCPApp {
         if (!this.isTimerRunning) return;
         
         clearInterval(this.currentTimer);
-        this.isTimerRunning = false;
-        
+        this.isTimerRunning = false;        
         const endTime = new Date();
         const durationSeconds = 60 - this.remainingSeconds;
         
         if (durationSeconds > 0 && typeof this.addToHistory === 'function') {
             this.addToHistory(this.startTime, endTime, durationSeconds);
-            this.showMessage(`⏹️ Duración: ${this.formatDuration(durationSeconds)}`, 'info');
+            this.showMessage(`&#9209;&#65039; Duración: ${this.formatDuration(durationSeconds)}`, 'info');
         }
         
         this.resetTimer();
         this.updateDynamicTitle();
-        console.log('⏹️ Timer stopped:', durationSeconds, 'seconds');
+        console.log('&#9209;&#65039; Timer stopped:', durationSeconds, 'seconds');
     }
     
     resetTimer() {
@@ -629,209 +616,26 @@ $(document).ready(() => {
     window.app = new MIBCPApp();
     
     const shortcuts = window.app.browser === 'chrome' ? 
-        '├─ ⚠️  Detección con advertencia (Chrome)' :
-        '├─ ⌨️  D: Toggle detección';
+        '&#9500;&#9472; &#9888;&#65039;  Detección con advertencia (Chrome)' :
+        '&#9500;&#9472; &#9000;&#65039;  D: Toggle detección';
         
-    console.log(`
-🎯 WIBCP v2.2 - Smart Call Center Tool
-├─ ⌨️  Espacio: Start/Stop timer
-├─ ⌨️  R: Reset timer  
-${shortcuts}
-├─ ⌨️  G: Abrir Genesys Cloud
-├─ ⌨️  1-4: Focus image slots
-├─ 🌐 Browser: ${window.app.browser}
-├─ 📱 Dynamic title: ENABLED
-└─ 🧠 Smart warnings: ON-DEMAND
-    `);
+//     console.log(`
+// 🎯 WIBCP v2.2 - Smart Call Center Tool
+// &#9500;&#9472; &#9000;&#65039;  Espacio: Start/Stop timer
+// &#9500;&#9472; &#9000;&#65039;  R: Reset timer  
+// ${shortcuts}
+// &#9500;&#9472; &#9000;&#65039;  G: Abrir Genesys Cloud
+// &#9500;&#9472; &#9000;&#65039;  1-4: Focus image slots
+// &#9500;&#9472; 🌐 Browser: ${window.app.browser}
+// &#9500;&#9472; 📱 Dynamic title: ENABLED
+// &#9492;&#9472; 🧠 Smart warnings: ON-DEMAND
+//     `);
+  
 });
 
-// Enhanced styles with smart warning improvements
-$('<style>').html(`
-    .toast {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        z-index: 3000;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.3s ease;
-        max-width: 350px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-    
-    .toast.show {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .toast-success { border-left: 4px solid var(--success-color); }
-    .toast-warning { border-left: 4px solid var(--warning-color); }
-    .toast-error { border-left: 4px solid var(--danger-color); }
-    .toast-info { border-left: 4px solid var(--primary-color); }
-    
-    .toast span { color: var(--text-primary); }
-    
-    .timer-finished {
-        animation: timerFinishPulse 3s ease-in-out;
-    }
-    
-    @keyframes timerFinishPulse {
-        0%, 100% { background: inherit; }
-        25%, 75% { background: rgba(245, 158, 11, 0.1); }
-        50% { background: rgba(245, 158, 11, 0.15); }
-    }
-    
-    /* Smart Browser Warning Styles */
-    .smart-browser-warning {
-        position: fixed;
-        top: 10vh;
-        left: 30vw; 
-        z-index: 5000;
-        width: 90%;
-        max-width: 600px;
-        border-radius: 5vh;
-    }
-    
-    .warning-content {
-        text-align: center;
-        padding: 2rem;
-    }
-    
-    .warning-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-    
-    .warning-content h3 {
-        color: var(--text-primary);
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
-    }
-    
-    .recommendation {
-        margin: 1.5rem 0;
-        padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    
-    .browser-setup {
-        display: flex;
-        gap: 2rem;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .browser-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 1rem;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        font-size: 0.9rem;
-    }
-    
-    .browser-item.recommended {
-        background: rgba(16, 185, 129, 0.1);
-        border: 2px solid rgba(16, 185, 129, 0.3);
-    }
-    
-    .browser-item i {
-        font-size: 2rem;
-    }
-    
-    .warning-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        margin: 1.5rem 0;
-    }
-    
-    .auto-dismiss-counter {
-        margin-top: 1rem;
-        padding: 0.75rem;
-        background: rgba(245, 158, 11, 0.1);
-        border-radius: 8px;
-        color: var(--warning-color);
-        font-size: 0.85rem;
-        font-weight: 600;
-        border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-    
-    #dismissCounter {
-        color: var(--danger-color);
-        font-weight: 700;
-    }
-    
-    @keyframes smartWarningSlideIn {
-        from {
-            opacity: 0;
-            transform: translate(-50%, -60%) scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-    }
-    
-    .smart-browser-warning::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: hsl(0 100% 89% / 1);
-        z-index: -1;
-        border-radius: 5vh;
-        animation: overlayFadeIn 0.3s ease-out;
-    }
-    
-    @keyframes overlayFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @media (max-width: 768px) {
-        .smart-browser-warning {
-            width: 95%;
-            margin: 1rem;
-        }
-        
-        .browser-setup {
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .warning-actions {
-            flex-direction: column;
-        }
-        
-        .warning-content {
-            padding: 1.5rem;
-        }
-        
-        .toast {
-            bottom: 10px;
-            right: 10px;
-            left: 10px;
-            max-width: none;
-        }
-    }
-`).appendTo('head');
 
-console.log('🎯 WIBCP Core with Dynamic Title & Smart Warnings loaded! ⏱️🧠📱 by @wtaype');
+
+console.log('🎯 WIBCP Core with Dynamic Title & Smart Warnings loaded! &#9201;&#65039;🧠📱 by @wtaype');
 
 /*
 === WIBCP - History Management System ===
@@ -1030,11 +834,11 @@ $.extend(MIBCPApp.prototype, {
         }
         
         if (avgDuration > 45) {
-            insights.push('⏱️ Tiempos de espera largos detectados');
+            insights.push('&#9201;&#65039; Tiempos de espera largos detectados');
         }
         
         if (shortCalls >= 2) {
-            insights.push('⚡ Buena eficiencia en llamadas rápidas');
+            insights.push('&#9889; Buena eficiencia en llamadas rápidas');
         }
         
         if (this.browser === 'chrome' && history.length >= 2) {
@@ -1056,14 +860,14 @@ $.extend(MIBCPApp.prototype, {
         
         const detectionMethod = item.detectionUsed ? '(auto)' : '(manual)';
         const browserInfo = item.browser ? `[${item.browser.toUpperCase()}]` : '';
-        const confirmed = confirm(`¿Eliminar registro de ${this.formatDuration(item.durationSeconds)} ${detectionMethod} ${browserInfo}?`);
+        const confirmed = confirm(`&#191;Eliminar registro de ${this.formatDuration(item.durationSeconds)} ${detectionMethod} ${browserInfo}?`);
         if (!confirmed) return;
         
         history = history.filter(h => h.id !== id);
         this.saveToLS('mibcp_history', history);
         this.renderHistory();
         
-        this.showMessage('🗑️ Registro eliminado', 'success');
+        this.showMessage('🗑&#65039; Registro eliminado', 'success');
         
         // Update title after deletion
         setTimeout(() => {
@@ -1082,24 +886,24 @@ $.extend(MIBCPApp.prototype, {
         const totalTime = history.reduce((sum, item) => sum + item.durationSeconds, 0);
         const smartUsage = history.filter(item => item.detectionUsed).length;
         
-        const confirmMessage = `⚠️ ELIMINAR TODOS LOS DATOS
+        const confirmMessage = `&#9888;&#65039; ELIMINAR TODOS LOS DATOS
 
 📊 Resumen de datos a eliminar:
-• ${totalCalls} registros del historial
-• ${this.formatDuration(totalTime)} tiempo total registrado
-• ${smartUsage} llamadas con detección automática
-• ${images.length} imágenes guardadas  
-• Notas${notes.text ? ' con contenido' : ' vacías'}
-• URL de Genesys Cloud${genesysUrl ? ' guardada' : ''}
-• Preferencia de detección${detectionPref ? ' (activada)' : ' (desactivada)'}
+&#8226; ${totalCalls} registros del historial
+&#8226; ${this.formatDuration(totalTime)} tiempo total registrado
+&#8226; ${smartUsage} llamadas con detección automática
+&#8226; ${images.length} imágenes guardadas  
+&#8226; Notas${notes.text ? ' con contenido' : ' vacías'}
+&#8226; URL de Genesys Cloud${genesysUrl ? ' guardada' : ''}
+&#8226; Preferencia de detección${detectionPref ? ' (activada)' : ' (desactivada)'}
 
-¿Continuar con la eliminación completa?`;
+&#191;Continuar con la eliminación completa?`;
         
         const confirmed = confirm(confirmMessage);
         if (!confirmed) return;
         
         // Enhanced double confirmation
-        const finalConfirm = confirm('🔴 CONFIRMACIÓN FINAL\n\n¿Estás COMPLETAMENTE seguro?\n\nSe perderán todas las estadísticas y configuraciones.');
+        const finalConfirm = confirm('🔴 CONFIRMACIÓN FINAL\n\n&#191;Estás COMPLETAMENTE seguro?\n\nSe perderán todas las estadísticas y configuraciones.');
         if (!finalConfirm) return;
         
         try {
@@ -1147,7 +951,7 @@ $.extend(MIBCPApp.prototype, {
             
         } catch (error) {
             console.error('Error clearing data:', error);
-            this.showMessage('❌ Error al eliminar algunos datos. Intenta nuevamente.', 'error');
+            this.showMessage('&#10060; Error al eliminar algunos datos. Intenta nuevamente.', 'error');
         }
     },
     
@@ -1191,284 +995,6 @@ $(document).ready(() => {
 });
 
 // Enhanced history styles with smart insights
-$('<style>').html(`
-    .empty-state {
-        text-align: center;
-        padding: 3rem 1.5rem;
-        color: var(--text-secondary);
-    }
-    
-    .empty-state i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-    
-    .empty-state h4 {
-        margin-bottom: 0.5rem;
-        color: var(--text-primary);
-        font-weight: 600;
-    }
-    
-    .empty-state small {
-        display: block;
-        margin-top: 1rem;
-        font-size: 0.8rem;
-        padding: 0.5rem 1rem;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .history-stats {
-        margin-bottom: 1.5rem;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: var(--border-radius-sm);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    
-    .stat-value {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.25rem;
-    }
-    
-    .stat-label {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.25rem;
-    }
-    
-    .smart-stat .stat-value {
-        color: var(--success-color);
-    }
-    
-    .stats-insights {
-        padding-top: 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .insight {
-        background: rgba(102, 126, 234, 0.1);
-        color: var(--primary-color);
-        padding: 0.25rem 0.75rem;
-        border-radius: 15px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        border: 1px solid rgba(102, 126, 234, 0.2);
-    }
-    
-    .history-item {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: var(--border-radius-sm);
-        padding: 1.25rem;
-        margin-bottom: 0.75rem;
-        transition: var(--transition);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .history-item:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateX(4px);
-    }
-    
-    /* Duration-based styling */
-    .history-item.duration-short {
-        border-left: 3px solid var(--success-color);
-    }
-    
-    .history-item.duration-long {
-        border-left: 3px solid var(--warning-color);
-    }
-    
-    .history-item.duration-normal {
-        border-left: 3px solid var(--primary-color);
-    }
-    
-    .history-duration {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-    }
-    
-    .duration-short .history-duration {
-        color: var(--success-color);
-    }
-    
-    .duration-long .history-duration {
-        color: var(--warning-color);
-    }
-    
-    .history-times {
-        display: flex;
-        gap: 1rem;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        margin-bottom: 0.5rem;
-    }
-    
-    .history-times span {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-    
-    .history-meta {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 0.8rem;
-    }
-    
-    .detection-used {
-        color: var(--success-color);
-    }
-    
-    .detection-manual {
-        color: var(--text-secondary);
-    }
-    
-    .browser-badge {
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    
-    .browser-badge.edge {
-        background: rgba(0, 120, 215, 0.2);
-        color: #0078d7;
-        border: 1px solid rgba(0, 120, 215, 0.3);
-    }
-    
-    .browser-badge.chrome {
-        background: rgba(234, 67, 53, 0.2);
-        color: #ea4335;
-        border: 1px solid rgba(234, 67, 53, 0.3);
-    }
-    
-    .browser-badge.firefox {
-        background: rgba(255, 149, 0, 0.2);
-        color: #ff9500;
-        border: 1px solid rgba(255, 149, 0, 0.3);
-    }
-    
-    .browser-badge.unknown {
-        background: rgba(156, 163, 175, 0.2);
-        color: #6b7280;
-        border: 1px solid rgba(156, 163, 175, 0.3);
-    }
-    
-    .history-delete {
-        background: transparent;
-        border: none;
-        color: var(--danger-color);
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 8px;
-        transition: var(--transition);
-    }
-    
-    .history-delete:hover {
-        background: rgba(239, 68, 68, 0.1);
-        transform: scale(1.1);
-    }
-    
-    .data-cleared {
-        animation: smartDataClearedEffect 2s ease-in-out;
-    }
-    
-    @keyframes smartDataClearedEffect {
-        0%, 100% { 
-            opacity: 1; 
-            filter: brightness(1) hue-rotate(0deg);
-        }
-        25% { 
-            opacity: 0.8; 
-            filter: brightness(1.1) hue-rotate(10deg);
-        }
-        50% { 
-            opacity: 0.9; 
-            filter: brightness(0.95) hue-rotate(-10deg);
-        }
-        75% { 
-            opacity: 0.85; 
-            filter: brightness(1.05) hue-rotate(5deg);
-        }
-    }
-    
-    .fade-in-up {
-        animation: fadeInUp 0.5s ease-out;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .stats-insights {
-            margin-top: 1rem;
-        }
-        
-        .insight {
-            font-size: 0.7rem;
-        }
-        
-        .history-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        
-        .history-delete {
-            align-self: flex-end;
-        }
-        
-        .history-times {
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-        
-        .history-meta {
-            justify-content: space-between;
-            width: 100%;
-        }
-    }
-`).appendTo('head');
 
 console.log('📊 WIBCP Smart History with Advanced Analytics loaded! 📈🧠 by @wtaype');
 
@@ -1781,7 +1307,7 @@ $.extend(MIBCPApp.prototype, {
     exportNotes() {
         const notesData = this.loadFromLS('mibcp_notes', { text: '' });
         if (!notesData.text) {
-            this.showMessage('❌ No hay notas para exportar', 'warning');
+            this.showMessage('&#10060; No hay notas para exportar', 'warning');
             return;
         }
         
@@ -1796,11 +1322,11 @@ Palabras: ${notesData.wordCount || 'N/A'}
 Caracteres: ${notesData.charCount || notesData.text.length}
 Líneas: ${notesData.lineCount || notesData.text.split('\n').length}
 Fecha actual: 2025-09-28 15:32:02 (UTC)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;
 
 ${notesData.text}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;&#9473;
 Generado por WIBCP v2.2 Smart - by @wtaype
 GitHub: https://github.com/wtaype
 Fecha: ${now.toLocaleDateString('es-ES')} ${now.toLocaleTimeString('es-ES')}`;
@@ -1875,248 +1401,6 @@ Fecha: ${now.toLocaleDateString('es-ES')} ${now.toLocaleTimeString('es-ES')}`;
     }
 });
 
-// Enhanced notes styles with smart features
-$('<style>').html(`
-    .notes-section.focused {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-    }
-    
-    .notes-counter {
-        position: absolute;
-        bottom: 0.75rem;
-        right: 1rem;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        padding: 0.5rem 0.75rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        pointer-events: none;
-        font-size: 0.75rem;
-        transition: var(--transition);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    
-    .counter-stats {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        margin-bottom: 0.25rem;
-    }
-    
-    .counter-stats span {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        color: var(--text-secondary);
-        font-weight: 500;
-    }
-    
-    .counter-stats i {
-        font-size: 0.7rem;
-        opacity: 0.8;
-    }
-    
-    .reading-time {
-        color: var(--primary-color) !important;
-        font-weight: 600 !important;
-    }
-    
-    .notes-complexity {
-        display: flex;
-        gap: 0.25rem;
-        flex-wrap: wrap;
-        margin-top: 0.25rem;
-    }
-    
-    .complexity-item {
-        background: rgba(102, 126, 234, 0.1);
-        color: var(--primary-color);
-        padding: 0.1rem 0.4rem;
-        border-radius: 8px;
-        font-size: 0.6rem;
-        font-weight: 600;
-        border: 1px solid rgba(102, 126, 234, 0.2);
-    }
-    
-    .complexity-item.dense {
-        background: rgba(245, 158, 11, 0.1);
-        color: var(--warning-color);
-        border-color: rgba(245, 158, 11, 0.2);
-    }
-    
-    .complexity-item.structured {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success-color);
-        border-color: rgba(16, 185, 129, 0.2);
-    }
-    
-    .complexity-item.technical {
-        background: rgba(139, 92, 246, 0.1);
-        color: #8b5cf6;
-        border-color: rgba(139, 92, 246, 0.2);
-    }
-    
-    .complexity-item.extensive {
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger-color);
-        border-color: rgba(239, 68, 68, 0.2);
-    }
-    
-    .save-indicator {
-        transition: var(--transition);
-        border-radius: 8px;
-    }
-    
-    .save-indicator.error {
-        background: var(--danger-color);
-        animation: errorPulseShake 0.6s ease-in-out;
-    }
-    
-    @keyframes errorPulseShake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-4px) scale(1.05); }
-        75% { transform: translateX(4px) scale(1.05); }
-    }
-    
-    #notesArea {
-        transition: var(--transition);
-        font-family: 'Inter', 'Consolas', monospace;
-        line-height: 1.6;
-        resize: vertical;
-        min-height: 50vh;
-        border: .5vh solid var(--primary-color);
-    }
-    
-    #notesArea:focus {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: var(--primary-color);
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        transform: translateY(-1px);
-    }
-    
-    #notesArea::placeholder {
-        color: var(--text-secondary);
-        opacity: 0.7;
-        font-style: italic;
-    }
-    
-    /* Smart visual feedback for typing */
-    .notes-section.typing #notesArea {
-        border-left: 3px solid var(--primary-color);
-    }
-    
-    .notes-section.saving .notes-counter {
-        border-color: var(--warning-color);
-        background: rgba(245, 158, 11, 0.05);
-    }
-    
-    .notes-section.saved .notes-counter {
-        border-color: var(--success-color);
-        background: rgba(16, 185, 129, 0.05);
-        animation: savedPulse 0.8s ease-out;
-    }
-    
-    @keyframes savedPulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.02); }
-        100% { transform: scale(1); }
-    }
-    
-    /* Export button integration */
-    .notes-export {
-        position: absolute;
-        top: -0.5rem;
-        right: 1rem;
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.3rem 0.8rem;
-        border-radius: 15px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        cursor: pointer;
-        opacity: 0;
-        transition: var(--transition);
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
-    }
-    
-    .notes-section:hover .notes-export {
-        opacity: 1;
-    }
-    
-    .notes-export:hover {
-        background: #5a67d8;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-    
-    /* Browser-specific enhancements */
-    .notes-section.chrome-notes .notes-counter {
-        border-color: rgba(234, 67, 53, 0.3);
-        background: rgba(234, 67, 53, 0.05);
-    }
-    
-    .notes-section.edge-notes .notes-counter {
-        border-color: rgba(0, 120, 215, 0.3);
-        background: rgba(0, 120, 215, 0.05);
-    }
-    
-    /* Responsive improvements */
-    @media (max-width: 768px) {
-        .notes-counter {
-            position: static;
-            margin-top: 0.75rem;
-            align-self: flex-end;
-        }
-        
-        .counter-stats {
-            gap: 0.5rem;
-            justify-content: center;
-        }
-        
-        .notes-complexity {
-            justify-content: center;
-        }
-        
-        .notes-export {
-            position: static;
-            margin-top: 0.5rem;
-            align-self: flex-end;
-            opacity: 1;
-        }
-        
-        #notesArea {
-            font-size: 16px; /* Prevent zoom on iOS */
-        }
-    }
-    
-    /* Accessibility improvements */
-    #notesArea:focus-visible {
-        outline: 2px solid var(--primary-color);
-        outline-offset: 2px;
-    }
-    
-    /* Print styles */
-    @media print {
-        .notes-counter,
-        .save-indicator,
-        .notes-export {
-            display: none !important;
-        }
-        
-        #notesArea {
-            border: 1px solid #ccc;
-            background: white;
-            color: black;
-            font-size: 12pt;
-            line-height: 1.5;
-        }
-    }
-`).appendTo('head');
-
 console.log('📝 WIBCP Smart Notes with Advanced Features loaded! 📄🧠 by @wtaype');
 
 /*
@@ -2133,7 +1417,7 @@ $.extend(MIBCPApp.prototype, {
     imageLoadingStates: new Map(),
     
     setupImageHandlers() {
-        console.log('🖼️ Setting up 4 smart image slots with Blob URLs');
+        console.log('🖼&#65039; Setting up 4 smart image slots with Blob URLs');
         
         $('.image-box').each((index, box) => {
             const $box = $(box);
@@ -2213,7 +1497,7 @@ $.extend(MIBCPApp.prototype, {
                             this.handleImageFile(file, replaceSlot);
                             this.showMessage(`📋 Imagen reemplazada en slot ${replaceSlot}`, 'info');
                         } else {
-                            this.showMessage('❌ No hay slots disponibles', 'warning');
+                            this.showMessage('&#10060; No hay slots disponibles', 'warning');
                         }
                     }
                     break;
@@ -2226,14 +1510,14 @@ $.extend(MIBCPApp.prototype, {
             this.cleanupAllBlobUrls();
         });
         
-        console.log('🖼️ Smart image handlers initialized with Blob URL management');
+        console.log('🖼&#65039; Smart image handlers initialized with Blob URL management');
     },
     
     handleMultipleImageFiles(files, preferredSlot) {
         const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
         
         if (imageFiles.length === 0) {
-            this.showMessage('❌ No se encontraron imágenes válidas', 'warning');
+            this.showMessage('&#10060; No se encontraron imágenes válidas', 'warning');
             return;
         }
         
@@ -2246,7 +1530,7 @@ $.extend(MIBCPApp.prototype, {
         const maxFiles = Math.min(imageFiles.length, availableSlots.length || 4);
         
         if (availableSlots.length === 0) {
-            this.showMessage('⚠️ Todos los slots ocupados. Solo se cargará la primera imagen.', 'warning');
+            this.showMessage('&#9888;&#65039; Todos los slots ocupados. Solo se cargará la primera imagen.', 'warning');
             this.handleImageFile(imageFiles[0], preferredSlot || 1);
             return;
         }
@@ -2264,7 +1548,7 @@ $.extend(MIBCPApp.prototype, {
         
         if (imageFiles.length > maxFiles) {
             setTimeout(() => {
-                this.showMessage(`⚠️ Solo se procesaron ${maxFiles} de ${imageFiles.length} imágenes`, 'warning');
+                this.showMessage(`&#9888;&#65039; Solo se procesaron ${maxFiles} de ${imageFiles.length} imágenes`, 'warning');
             }, 1000);
         }
     },
@@ -2281,7 +1565,7 @@ $.extend(MIBCPApp.prototype, {
     },
     
     askForSlotReplacement() {
-        const slot = prompt('Todos los slots están ocupados. ¿En qué slot quieres reemplazar la imagen? (1-4)');
+        const slot = prompt('Todos los slots están ocupados. &#191;En qué slot quieres reemplazar la imagen? (1-4)');
         const slotNum = parseInt(slot);
         return (slotNum >= 1 && slotNum <= 4) ? slotNum : null;
     },
@@ -2301,13 +1585,13 @@ $.extend(MIBCPApp.prototype, {
         const maxSize = 8 * 1024 * 1024; // 8MB
         
         if (!validTypes.includes(file.type)) {
-            this.showMessage('❌ Tipo no válido. Use PNG, JPG, WEBP, GIF o SVG', 'error');
+            this.showMessage('&#10060; Tipo no válido. Use PNG, JPG, WEBP, GIF o SVG', 'error');
             return false;
         }
         
         if (file.size > maxSize) {
             const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-            this.showMessage(`❌ Archivo muy grande: ${sizeMB}MB. Máximo 8MB`, 'error');
+            this.showMessage(`&#10060; Archivo muy grande: ${sizeMB}MB. Máximo 8MB`, 'error');
             return false;
         }
         
@@ -2364,7 +1648,7 @@ $.extend(MIBCPApp.prototype, {
         
         reader.onerror = (e) => {
             console.error('File reading error:', e);
-            this.showMessage('❌ Error al leer el archivo', 'error');
+            this.showMessage('&#10060; Error al leer el archivo', 'error');
             this.setImageLoadingState(slot, false);
             $box.removeClass('image-loading');
             this.clearLoadingProgress(slot);
@@ -2372,7 +1656,7 @@ $.extend(MIBCPApp.prototype, {
         
         reader.readAsDataURL(file);
         
-        console.log(`🖼️ Processing image for slot ${slot}:`, {
+        console.log(`🖼&#65039; Processing image for slot ${slot}:`, {
             name: file.name,
             size: this.formatFileSize(file.size),
             type: file.type,
@@ -2411,7 +1695,7 @@ $.extend(MIBCPApp.prototype, {
             $text.text(`${Math.round(progress)}%`);
             
             if (progress >= 100) {
-                $progress.find('.progress-label').text('¡Completado!');
+                $progress.find('.progress-label').text('&#161;Completado!');
             } else if (progress >= 80) {
                 $progress.find('.progress-label').text('Finalizando...');
             }
@@ -2469,7 +1753,7 @@ $.extend(MIBCPApp.prototype, {
             $preview.css({ transform: 'scale(1)' });
         });
         
-        console.log(`🖼️ Image displayed in slot ${slot} with optimized Blob URL`);
+        console.log(`🖼&#65039; Image displayed in slot ${slot} with optimized Blob URL`);
     },
     
     saveImage(slot, dataUrl, filename = null) {
@@ -2477,12 +1761,12 @@ $.extend(MIBCPApp.prototype, {
         const $preview = $box.find('.image-preview');
         
         if (!$preview.hasClass('show') && !dataUrl) {
-            this.showMessage('❌ No hay imagen para guardar', 'warning');
+            this.showMessage('&#10060; No hay imagen para guardar', 'warning');
             return;
         }
         
         if (!dataUrl) {
-            this.showMessage('⚠️ No se puede guardar imagen temporal', 'warning');
+            this.showMessage('&#9888;&#65039; No se puede guardar imagen temporal', 'warning');
             return;
         }
         
@@ -2533,11 +1817,11 @@ $.extend(MIBCPApp.prototype, {
         const $link = $box.find('.image-link');
         
         if (!$preview.hasClass('show')) {
-            this.showMessage('❌ No hay imagen para eliminar', 'warning');
+            this.showMessage('&#10060; No hay imagen para eliminar', 'warning');
             return;
         }
         
-        const confirmed = confirm(`¿Eliminar imagen del slot ${slot}?\n\nEsta acción no se puede deshacer.`);
+        const confirmed = confirm(`&#191;Eliminar imagen del slot ${slot}?\n\nEsta acción no se puede deshacer.`);
         if (!confirmed) return;
         
         this.cleanupSlotBlobUrl(slot);
@@ -2558,9 +1842,9 @@ $.extend(MIBCPApp.prototype, {
             
             $link.hide().attr('href', '#');
             $box.find('.image-input').val('');
-            this.showMessage(`🗑️ Imagen eliminada del slot ${slot}`, 'success');
+            this.showMessage(`🗑&#65039; Imagen eliminada del slot ${slot}`, 'success');
             
-            console.log(`🗑️ Image deleted from slot ${slot}:`, deletedImage?.filename);
+            console.log(`🗑&#65039; Image deleted from slot ${slot}:`, deletedImage?.filename);
         }
     },
     
@@ -2586,7 +1870,7 @@ $.extend(MIBCPApp.prototype, {
         
         if (loadedCount > 0) {
             const totalSize = images.reduce((sum, img) => sum + (img.fileSize || 0), 0);
-            console.log(`🖼️ Loaded ${loadedCount} images:`, {
+            console.log(`🖼&#65039; Loaded ${loadedCount} images:`, {
                 totalSize: this.formatFileSize(totalSize),
                 activeBlobUrls: this.imageBlobUrls.size,
                 browser: this.browser,
@@ -2655,293 +1939,8 @@ $.extend(MIBCPApp.prototype, {
 });
 
 // Enhanced image styles with advanced Blob optimization
-$('<style>').html(`
-    .image-boxes.drag-active .image-box {
-        border-color: var(--primary-color);
-        background: rgba(102, 126, 234, 0.08);
-        transform: scale(1.01);
-    }
-    
-    .image-box.dragover {
-        border-color: var(--success-color) !important;
-        background: rgba(16, 185, 129, 0.15) !important;
-        transform: scale(1.05);
-        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-    }
-    
-    .image-container {
-        width: 100%;
-        height: 100%;
-        border-radius: var(--border-radius-sm);
-        overflow: hidden;
-        position: relative;
-        background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .image-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: var(--transition);
-        opacity: 0;
-    }
-    
-    .image-container img.loaded {
-        opacity: 1;
-    }
-    
-    .image-container img.error {
-        opacity: 0.5;
-        filter: grayscale(100%);
-    }
-    
-    .image-container:hover img.loaded {
-        transform: scale(1.05);
-    }
-    
-    /* Enhanced Loading Progress */
-    .image-loading {
-        position: relative;
-    }
-    
-    .loading-progress {
-        position: absolute;
-        bottom: 1rem;
-        left: 1rem;
-        right: 1rem;
-        background: rgba(0, 0, 0, 0.85);
-        border-radius: 12px;
-        padding: 0.75rem;
-        color: white;
-        font-size: 0.8rem;
-        z-index: 25;
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .progress-bar {
-        height: 6px;
-        background: var(--primary-color);
-        border-radius: 3px;
-        width: 0%;
-        transition: width 0.3s ease;
-        margin-bottom: 0.5rem;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .progress-bar::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        animation: progressShimmer 1.5s infinite;
-    }
-    
-    @keyframes progressShimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
-    
-    .progress-text {
-        text-align: center;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-        color: var(--primary-color);
-    }
-    
-    .progress-label {
-        text-align: center;
-        opacity: 0.8;
-        font-size: 0.75rem;
-    }
-    
-    /* Enhanced Save Animation */
-    .image-saved {
-        animation: smartImageSaved 2s ease-in-out;
-    }
-    
-    @keyframes smartImageSaved {
-        0%, 100% { 
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: none;
-            transform: scale(1);
-        }
-        25% { 
-            border-color: var(--success-color);
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
-            transform: scale(1.02);
-        }
-        75% { 
-            border-color: var(--success-color);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-            transform: scale(1.01);
-        }
-    }
-    
-    /* Enhanced Remove Animation */
-    .removing {
-        animation: smartImageRemoving 0.6s ease-in-out forwards;
-    }
-    
-    @keyframes smartImageRemoving {
-        0% { 
-            opacity: 1; 
-            transform: scale(1) rotate(0deg);
-        }
-        60% { 
-            opacity: 0.3; 
-            transform: scale(0.85) rotate(-3deg);
-        }
-        100% { 
-            opacity: 0; 
-            transform: scale(0.7) rotate(-5deg);
-        }
-    }
-    
-    /* Enhanced Button Styling */
-    .btn-save,
-    .btn-delete {
-        padding: 0.65rem;
-        border: none;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        flex: 1;
-        min-width: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .btn-save {
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        color: white;
-        box-shadow: 0 3px 10px rgba(16, 185, 129, 0.2);
-    }
-    
-    .btn-save:hover {
-        background: linear-gradient(135deg, #059669, #047857);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
-    }
-    
-    .btn-delete {
-        background: linear-gradient(135deg, var(--danger-color), #dc2626);
-        color: white;
-        box-shadow: 0 3px 10px rgba(239, 68, 68, 0.2);
-    }
-    
-    .btn-delete:hover {
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
-    }
-    
-    /* Simple and Efficient Link Button */
-    .image-link {
-        background: linear-gradient(135deg, var(--primary-color), #5a67d8);
-        color: white;
-        text-decoration: none;
-        padding: 0.65rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        flex: 1;
-        min-width: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
-    }
-    
-    .image-link:hover {
-        background: linear-gradient(135deg, #5a67d8, #4c51bf);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        text-decoration: none;
-        color: white;
-    }
-    
-    /* Smart Blob URL optimization indicator */
-    .image-preview.show::before {
-        content: 'BLOB';
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        background: rgba(16, 185, 129, 0.8);
-        color: white;
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
-        font-size: 0.6rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        opacity: 0;
-        transition: var(--transition);
-        z-index: 10;
-        backdrop-filter: blur(5px);
-    }
-    
-    .image-preview:hover::before {
-        opacity: 0.9;
-    }
-    
-    /* Loading state enhancements */
-    .image-loading .image-dropzone {
-        opacity: 0.5;
-        pointer-events: none;
-        position: relative;
-    }
-    
-    .image-loading .image-dropzone::before {
-        content: 'Procesando...';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        z-index: 20;
-    }
-    
-    /* Responsive improvements */
-    @media (max-width: 768px) {
-        .loading-progress {
-            left: 0.5rem;
-            right: 0.5rem;
-            bottom: 0.5rem;
-            padding: 0.5rem;
-        }
-        
-        .btn-save,
-        .btn-delete,
-        .image-link {
-            padding: 0.5rem;
-            font-size: 0.75rem;
-            min-width: 44px;
-        }
-        
-        .image-preview.show::before {
-            font-size: 0.5rem;
-            padding: 0.15rem 0.3rem;
-        }
-    }
-`).appendTo('head');
 
-console.log('🖼️ WIBCP Smart Image System with Optimized Blob URLs loaded! 📸⚡ by @wtaype');
+console.log('🖼&#65039; WIBCP Smart Image System with Optimized Blob URLs loaded! 📸&#9889; by @wtaype');
 
 /*
 === WIBCP - Smart Genesys Cloud Integration ===
@@ -2961,7 +1960,7 @@ $.extend(MIBCPApp.prototype, {
     lastGenesysOpened: null,
     
     setupGenesysCloud() {
-        console.log('☁️ Setting up smart Genesys Cloud integration by @wtaype');
+        console.log('&#9729;&#65039; Setting up smart Genesys Cloud integration by @wtaype');
         
         this.setDefaultGenesysUrl();
         
@@ -3011,7 +2010,7 @@ $.extend(MIBCPApp.prototype, {
         this.startSmartWindowStatusCheck();
         this.setupBrowserSpecificFeatures();
         
-        console.log('☁️ Genesys Cloud integration initialized successfully');
+        console.log('&#9729;&#65039; Genesys Cloud integration initialized successfully');
     },
     
     setDefaultGenesysUrl() {
@@ -3020,7 +2019,7 @@ $.extend(MIBCPApp.prototype, {
         if (!savedUrl) {
             $('#genesysUrl').val(this.defaultGenesysUrl);
             this.saveGenesysUrl();
-            console.log('☁️ Default Genesys URL set:', this.defaultGenesysUrl);
+            console.log('&#9729;&#65039; Default Genesys URL set:', this.defaultGenesysUrl);
         }
     },
     
@@ -3133,9 +2132,9 @@ $.extend(MIBCPApp.prototype, {
     
     showUrlValidationFeedback(type) {
         const messages = {
-            valid: '✅ URL válida de Genesys Cloud',
-            warning: '⚠️ URL válida pero verifica que sea Genesys',
-            invalid: '❌ URL no válida'
+            valid: '&#9989; URL válida de Genesys Cloud',
+            warning: '&#9888;&#65039; URL válida pero verifica que sea Genesys',
+            invalid: '&#10060; URL no válida'
         };
         
         // Only show feedback for invalid URLs to avoid spam
@@ -3149,7 +2148,7 @@ $.extend(MIBCPApp.prototype, {
         
         if (!url) {
             $('#genesysUrl').val(this.defaultGenesysUrl);
-            this.showMessage('⚠️ Usando URL por defecto de Genesys Cloud', 'info');
+            this.showMessage('&#9888;&#65039; Usando URL por defecto de Genesys Cloud', 'info');
             return;
         }
         
@@ -3159,7 +2158,7 @@ $.extend(MIBCPApp.prototype, {
             const urlObj = new URL(finalUrl);
             finalUrl = urlObj.toString();
         } catch (e) {
-            this.showMessage('❌ URL no válida', 'error');
+            this.showMessage('&#10060; URL no válida', 'error');
             $('#genesysUrl').focus().select();
             return;
         }
@@ -3241,9 +2240,9 @@ $.extend(MIBCPApp.prototype, {
         
         // Success message with smart info
         const domain = new URL(url).hostname;
-        this.showMessage(`☁️ Genesys Cloud abierto en nueva ventana: ${domain}`, 'success');
+        this.showMessage(`&#9729;&#65039; Genesys Cloud abierto en nueva ventana: ${domain}`, 'success');
         
-        console.log('☁️ Genesys Cloud opened successfully by @wtaype:', {
+        console.log('&#9729;&#65039; Genesys Cloud opened successfully by @wtaype:', {
             url: url,
             browser: this.browser,
             windowSize: this.calculateOptimalWindowSize(),
@@ -3255,7 +2254,7 @@ $.extend(MIBCPApp.prototype, {
     handleGenesysWindowError(error) {
         this.updateGenesysButtonState('error');
         
-        let errorMessage = '❌ Error al abrir Genesys Cloud.';
+        let errorMessage = '&#10060; Error al abrir Genesys Cloud.';
         let suggestion = '';
         
         if (error.message.includes('blocked')) {
@@ -3324,11 +2323,11 @@ $.extend(MIBCPApp.prototype, {
     handleGenesysWindowClosed() {
         this.updateGenesysButtonState('closed');
         this.updateDynamicTitle();
-        console.log('☁️ Genesys Cloud window was closed by @wtaype');
+        console.log('&#9729;&#65039; Genesys Cloud window was closed by @wtaype');
         this.genesysWindow = null;
         
         // Optional: Brief notification
-        this.showMessage('☁️ Ventana de Genesys Cloud cerrada', 'info');
+        this.showMessage('&#9729;&#65039; Ventana de Genesys Cloud cerrada', 'info');
     },
     
     saveGenesysUrl() {
@@ -3346,7 +2345,7 @@ $.extend(MIBCPApp.prototype, {
         
         if (this.saveToLS('mibcp_genesys_url', url)) {
             this.saveToLS('mibcp_genesys_data', genesysData);
-            console.log('☁️ Genesys URL saved by @wtaype:', url);
+            console.log('&#9729;&#65039; Genesys URL saved by @wtaype:', url);
         }
     },
     
@@ -3365,7 +2364,7 @@ $.extend(MIBCPApp.prototype, {
             this.validateAndFormatUrl();
         }, 100);
         
-        console.log('☁️ Genesys URL loaded by @wtaype:', savedUrl);
+        console.log('&#9729;&#65039; Genesys URL loaded by @wtaype:', savedUrl);
     },
     
     // Focus management with smart features
@@ -3373,7 +2372,7 @@ $.extend(MIBCPApp.prototype, {
         if (this.genesysWindow && !this.genesysWindow.closed) {
             try {
                 this.genesysWindow.focus();
-                this.showMessage('☁️ Genesys Cloud enfocado', 'info');
+                this.showMessage('&#9729;&#65039; Genesys Cloud enfocado', 'info');
                 
                 // Highlight button briefly
                 $('#openGenesys').addClass('genesys-focused');
@@ -3383,10 +2382,10 @@ $.extend(MIBCPApp.prototype, {
                 
             } catch (e) {
                 console.log('Could not focus Genesys window:', e);
-                this.showMessage('⚠️ No se pudo enfocar la ventana de Genesys', 'warning');
+                this.showMessage('&#9888;&#65039; No se pudo enfocar la ventana de Genesys', 'warning');
             }
         } else {
-            this.showMessage('⚠️ Ventana de Genesys Cloud no está abierta', 'warning');
+            this.showMessage('&#9888;&#65039; Ventana de Genesys Cloud no está abierta', 'warning');
         }
     },
     
@@ -3423,7 +2422,7 @@ $.extend(MIBCPApp.prototype, {
             clearTimeout(this.genesysUrlSaveTimer);
         }
         
-        console.log('☁️ Genesys resources cleaned up by @wtaype');
+        console.log('&#9729;&#65039; Genesys resources cleaned up by @wtaype');
     }
 });
 
@@ -3446,239 +2445,8 @@ $(document).on('keydown', (e) => {
     }
 });
 
-// Enhanced Genesys Cloud styles with smart features
-$('<style>').html(`
-    .genesys-section {
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        transition: var(--transition);
-    }
-    
-    .genesys-section.focused {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 20px rgba(102, 126, 234, 0.1);
-        transform: translateY(-1px);
-    }
-    
-    .genesys-section h3 {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-    
-    .genesys-section h3 i {
-        color: var(--primary-color);
-    }
-    
-    .genesys-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .genesys-input-group {
-        display: flex;
-        gap: 1rem;
-        align-items: stretch;
-    }
-    
-    .genesys-input {
-        flex: 1;
-        padding: 0.875rem 1.25rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: var(--border-radius-sm);
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        font-family: 'Inter', monospace;
-        font-size: 0.95rem;
-        color: var(--text-primary);
-        transition: var(--transition);
-    }
-    
-    .genesys-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-1px);
-    }
-    
-    .genesys-input::placeholder {
-        color: var(--text-secondary);
-        opacity: 0.8;
-    }
-    
-    /* Smart URL validation states */
-    .genesys-input.valid-url {
-        border-color: var(--success-color);
-        background: rgba(16, 185, 129, 0.05);
-    }
-    
-    .genesys-input.warning-url {
-        border-color: var(--warning-color);
-        background: rgba(245, 158, 11, 0.05);
-    }
-    
-    .genesys-input.invalid-url {
-        border-color: var(--danger-color);
-        background: rgba(239, 68, 68, 0.05);
-        animation: invalidUrlShake 0.4s ease-in-out;
-    }
-    
-    @keyframes invalidUrlShake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-3px); }
-        75% { transform: translateX(3px); }
-    }
-    
-    /* Browser-specific input styling */
-    .genesys-input-edge {
-        border-left: 3px solid #0078d7;
-    }
-    
-    .genesys-input-chrome {
-        border-left: 3px solid #ea4335;
-    }
-    
-    .genesys-btn {
-        padding: 0.875rem 2rem;
-        white-space: nowrap;
-        font-weight: 600;
-        letter-spacing: 0.025em;
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-        border: none;
-        border-radius: var(--border-radius-sm);
-        cursor: pointer;
-    }
-    
-    /* Smart button states */
-    .genesys-btn.genesys-loading {
-        background: rgba(102, 126, 234, 0.8);
-        color: white;
-        pointer-events: none;
-    }
-    
-    .genesys-btn.genesys-active {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
-    }
-    
-    .genesys-btn.genesys-active:hover {
-        background: linear-gradient(135deg, #059669, #047857);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px 0 rgba(16, 185, 129, 0.4);
-    }
-    
-    .genesys-btn.genesys-error {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: white;
-    }
-    
-    .genesys-btn.genesys-focused {
-        animation: focusedPulse 1s ease-in-out;
-    }
-    
-    @keyframes focusedPulse {
-        0%, 100% { 
-            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
-        }
-        50% { 
-            box-shadow: 0 8px 25px 0 rgba(16, 185, 129, 0.6);
-            transform: scale(1.02);
-        }
-    }
-    
-    /* Browser-specific button styling */
-    .genesys-btn-edge {
-        border-bottom: 3px solid #0078d7;
-    }
-    
-    .genesys-btn-chrome {
-        border-bottom: 3px solid #ea4335;
-    }
-    
-    .genesys-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: var(--text-secondary);
-        font-size: 0.85rem;
-        margin-left: 0.5rem;
-    }
-    
-    .genesys-info i {
-        color: var(--primary-color);
-        opacity: 0.8;
-    }
-    
-    .optimal-browser-badge {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success-color);
-        padding: 0.25rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border: 1px solid rgba(16, 185, 129, 0.2);
-    }
-    
-    /* Loading animation for button */
-    .genesys-btn.genesys-loading::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        animation: loadingShimmer 1.5s infinite;
-    }
-    
-    @keyframes loadingShimmer {
-        0% { left: -100%; }
-        100% { left: 100%; }
-    }
-    
-    /* Enhanced responsive design */
-    @media (max-width: 768px) {
-        .genesys-input-group {
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        
-        .genesys-btn {
-            padding: 1rem;
-            text-align: center;
-            justify-content: center;
-        }
-        
-        .genesys-input {
-            padding: 1rem 1.25rem;
-            font-size: 16px; /* Prevent zoom on iOS */
-        }
-        
-        .genesys-info {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-        
-        .optimal-browser-badge {
-            align-self: flex-end;
-        }
-    }
-`).appendTo('head');
 
-console.log('☁️ WIBCP Smart Genesys Cloud Integration loaded! 🌐🧠 by @wtaype');
+console.log('&#9729;&#65039; WIBCP Smart Genesys Cloud Integration loaded! 🌐🧠 by @wtaype');
 console.log('🔗 GitHub: https://github.com/wtaype');
 
 /*
@@ -3717,8 +2485,8 @@ $.extend(MIBCPApp.prototype, {
             
             console.log('📊 All systems loaded successfully');
         } catch (error) {
-            console.error('❌ Error loading systems:', error);
-            this.showMessage('⚠️ Algunos módulos no se cargaron correctamente', 'warning');
+            console.error('&#10060; Error loading systems:', error);
+            this.showMessage('&#9888;&#65039; Algunos módulos no se cargaron correctamente', 'warning');
         }
     },
     
@@ -3735,7 +2503,7 @@ $.extend(MIBCPApp.prototype, {
                     if (typeof this.getImageStats === 'function') {
                         const stats = this.getImageStats();
                         if (stats && stats.count > 0) {
-                            console.log('🖼️ Image System Stats by @wtaype:', stats);
+                            console.log('🖼&#65039; Image System Stats by @wtaype:', stats);
                         }
                     }
                 }, 2500);
@@ -3755,7 +2523,7 @@ $.extend(MIBCPApp.prototype, {
                 setTimeout(() => {
                     if (typeof this.getGenesysStats === 'function') {
                         const stats = this.getGenesysStats();
-                        console.log('☁️ Genesys Integration Stats by @wtaype:', stats);
+                        console.log('&#9729;&#65039; Genesys Integration Stats by @wtaype:', stats);
                     }
                 }, 1000);
             }
@@ -3777,11 +2545,7 @@ $.extend(MIBCPApp.prototype, {
                 smartAnalytics: true
             },
             repositories: [
-                'https://github.com/wtaype/retodelmes',
-                'https://github.com/wtaype/aver', 
                 'https://github.com/wtaype/cartadehawka',
-                'https://github.com/wtaype/tusfloresamor',
-                'https://github.com/wtaype/wiimage'
             ]
         };
         
@@ -3790,21 +2554,21 @@ $.extend(MIBCPApp.prototype, {
         // Display user info in console
         setTimeout(() => {
             console.log(`
-╔════════════════════════════════════════════════════════════════╗
-║                    WIBCP v2.2 SMART - by @wtaype               ║
-╠════════════════════════════════════════════════════════════════╣
-║ 🎯 Call Center Tool Inteligente                               ║
-║ 📱 Título Dinámico: ${systemInfo.features.dynamicTitle ? 'ACTIVADO' : 'DESACTIVADO'}                              ║
-║ 🎤 Detección Smart: ${systemInfo.features.smartDetection ? 'ACTIVADO' : 'DESACTIVADO (Chrome)'}                              ║
-║ ☁️  Integración Genesys: ${systemInfo.features.genesysIntegration ? 'ACTIVADO' : 'DESACTIVADO'}                          ║
-║ 🖼️ Optimización Blob: ${systemInfo.features.blobOptimization ? 'ACTIVADO' : 'DESACTIVADO'}                           ║
-║ 📊 Analytics Smart: ${systemInfo.features.smartAnalytics ? 'ACTIVADO' : 'DESACTIVADO'}                             ║
-╠════════════════════════════════════════════════════════════════╣
-║ 👤 Usuario: wtaype                                            ║
-║ 🌐 Navegador: ${this.browser.toUpperCase()}                                           ║
-║ 📅 Fecha: 2025-09-28 15:36:03 UTC                            ║
-║ 🔗 GitHub: https://github.com/wtaype                         ║
-╚════════════════════════════════════════════════════════════════╝
+&#9556;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9559;
+&#9553;                    WIBCP v2.2 SMART - by @wtaype               &#9553;
+&#9568;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9571;
+&#9553; 🎯 Call Center Tool Inteligente                               &#9553;
+&#9553; 📱 Título Dinámico: ${systemInfo.features.dynamicTitle ? 'ACTIVADO' : 'DESACTIVADO'}                              &#9553;
+&#9553; 🎤 Detección Smart: ${systemInfo.features.smartDetection ? 'ACTIVADO' : 'DESACTIVADO (Chrome)'}                              &#9553;
+&#9553; &#9729;&#65039;  Integración Genesys: ${systemInfo.features.genesysIntegration ? 'ACTIVADO' : 'DESACTIVADO'}                          &#9553;
+&#9553; 🖼&#65039; Optimización Blob: ${systemInfo.features.blobOptimization ? 'ACTIVADO' : 'DESACTIVADO'}                           &#9553;
+&#9553; 📊 Analytics Smart: ${systemInfo.features.smartAnalytics ? 'ACTIVADO' : 'DESACTIVADO'}                             &#9553;
+&#9568;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9571;
+&#9553; 👤 Usuario: wtaype                                            &#9553;
+&#9553; 🌐 Navegador: ${this.browser.toUpperCase()}                                           &#9553;
+&#9553; 📅 Fecha: 2025-09-28 15:36:03 UTC                            &#9553;
+&#9553; 🔗 GitHub: https://github.com/wtaype                         &#9553;
+&#9562;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9565;
             `);
         }, 3000);
     },
@@ -3939,7 +2703,7 @@ $.extend(MIBCPApp.prototype, {
         console.log('🏥 System Health Check by @wtaype:', health);
         
         if (health.overall !== 'healthy') {
-            this.showMessage(`⚠️ Sistema: ${health.overall} (${failedChecks} fallas)`, 'warning');
+            this.showMessage(`&#9888;&#65039; Sistema: ${health.overall} (${failedChecks} fallas)`, 'warning');
         }
         
         return health;
@@ -3983,28 +2747,28 @@ $(document).ready(() => {
     
     // Display complete shortcut information
     const shortcuts = window.app.browser === 'chrome' ? 
-        '├─ ⚠️  Detección con advertencia inteligente (Chrome)' :
-        '├─ ⌨️  D: Toggle detección automática';
+        '&#9500;&#9472; &#9888;&#65039;  Detección con advertencia inteligente (Chrome)' :
+        '&#9500;&#9472; &#9000;&#65039;  D: Toggle detección automática';
         
     console.log(`
 🎯 WIBCP v2.2 SMART - Complete Call Center Tool by @wtaype
-├─ ⌨️  Espacio: Start/Stop timer
-├─ ⌨️  R: Reset timer  
+&#9500;&#9472; &#9000;&#65039;  Espacio: Start/Stop timer
+&#9500;&#9472; &#9000;&#65039;  R: Reset timer  
 ${shortcuts}
-├─ ⌨️  G: Abrir Genesys Cloud
-├─ ⌨️  Ctrl+G: Enfocar ventana Genesys
-├─ ⌨️  Ctrl+Shift+G: Abrir Genesys (global)
-├─ ⌨️  Ctrl+S: Guardar notas (en área de notas)
-├─ ⌨️  1-4: Focus image slots
-├─ 🌐 Browser: ${window.app.browser} (${window.app.browser === 'edge' ? 'OPTIMAL' : 'OK'})
-├─ 📱 Dynamic title: ENABLED
-├─ 🧠 Smart warnings: ON-DEMAND
-├─ ☁️  Genesys Cloud: INTEGRATED
-├─ 🖼️ Blob optimization: ENABLED
-├─ 📊 Smart analytics: ENABLED
-├─ 👤 User: wtaype
-├─ 📅 Date: 2025-09-28 15:36:03 UTC
-└─ 🔗 GitHub: https://github.com/wtaype
+&#9500;&#9472; &#9000;&#65039;  G: Abrir Genesys Cloud
+&#9500;&#9472; &#9000;&#65039;  Ctrl+G: Enfocar ventana Genesys
+&#9500;&#9472; &#9000;&#65039;  Ctrl+Shift+G: Abrir Genesys (global)
+&#9500;&#9472; &#9000;&#65039;  Ctrl+S: Guardar notas (en área de notas)
+&#9500;&#9472; &#9000;&#65039;  1-4: Focus image slots
+&#9500;&#9472; 🌐 Browser: ${window.app.browser} (${window.app.browser === 'edge' ? 'OPTIMAL' : 'OK'})
+&#9500;&#9472; 📱 Dynamic title: ENABLED
+&#9500;&#9472; 🧠 Smart warnings: ON-DEMAND
+&#9500;&#9472; &#9729;&#65039;  Genesys Cloud: INTEGRATED
+&#9500;&#9472; 🖼&#65039; Blob optimization: ENABLED
+&#9500;&#9472; 📊 Smart analytics: ENABLED
+&#9500;&#9472; 👤 User: wtaype
+&#9500;&#9472; 📅 Date: 2025-09-28 15:36:03 UTC
+&#9492;&#9472; 🔗 GitHub: https://github.com/wtaype
     `);
     
     // Show final initialization message
@@ -4062,81 +2826,6 @@ $(window).on('beforeunload', () => {
 });
 
 // Additional styles for final touches
-$('<style>').html(`
-    /* Enhanced system-wide animations */
-    @keyframes appInitialized {
-        0% { opacity: 0.8; transform: scale(0.98); }
-        50% { opacity: 1; transform: scale(1.01); }
-        100% { opacity: 1; transform: scale(1); }
-    }
-    
-    body.app-initialized {
-        animation: appInitialized 1s ease-out;
-    }
-    
-    /* Power user indicators */
-    .power-user-active::after {
-        content: '⚡ @wilder.taype';
-        position: fixed;
-        bottom: 5px;
-        right: 5px;
-        font-size: 0.7rem;
-        color: var(--primary-color);
-        opacity: 0.7;
-        pointer-events: none;
-        z-index: 9999;
-    }
-    
-    /* System health indicators */
-    .system-healthy {
-        border-bottom: 2px solid var(--success-color);
-    }
-    
-    .system-warning {
-        border-bottom: 2px solid var(--warning-color);
-    }
-    
-    .system-critical {
-        border-bottom: 2px solid var(--danger-color);
-        animation: criticalPulse 2s infinite;
-    }
-    
-    @keyframes criticalPulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-    
-    /* GitHub integration styles */
-    .github-integration {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        font-size: 0.7rem;
-        color: var(--text-secondary);
-        opacity: 0.6;
-        pointer-events: none;
-        z-index: 1000;
-    }
-    
-    .github-integration a {
-        color: var(--primary-color);
-        text-decoration: none;
-        pointer-events: all;
-    }
-    
-    .github-integration a:hover {
-        text-decoration: underline;
-    }
-    
-    /* Mobile optimizations */
-    @media (max-width: 768px) {
-        .github-integration,
-        .power-user-active::after {
-            display: none;
-        }
-    }
-`).appendTo('head');
-
 // Add GitHub integration indicator
 $('body').append(`
     <div class="github-integration">
@@ -4149,7 +2838,7 @@ setTimeout(() => {
     $('body').addClass('app-initialized power-user-active');
 }, 4500);
 
-console.log('🎉 WIBCP v2.2 Smart - Complete Initialization Module loaded! 🚀✨ by @wtaype');
+console.log('🎉 WIBCP v2.2 Smart - Complete Initialization Module loaded! 🚀&#10024; by @wtaype');
 console.log('📅 Built: 2025-09-28 15:36:03 UTC');
 console.log('🔗 GitHub: https://github.com/wtaype');
 console.log('👤 User: wtaype');
@@ -4170,7 +2859,7 @@ $.extend(MIBCPApp.prototype, {
             this.showLightAboutModal();
         });
         
-        console.log('ℹ️ WIBCP About Modal initialized by @wtaype');
+        console.log('ℹ&#65039; WIBCP About Modal initialized by @wtaype');
     },
     
     showLightAboutModal() {
@@ -4180,37 +2869,32 @@ $.extend(MIBCPApp.prototype, {
                     <div class="light-modal-header">
                         <div class="modal-icon">🎯</div>
                         <h3>Acerca de WIBCP</h3>
-                        <button class="close-btn" onclick="app.dismissLightAboutModal()">×</button>
-                    </div>
-                    
+                        <button class="close-btn" onclick="app.dismissLightAboutModal()">&#215;</button>
+                    </div>                    
                     <div class="light-modal-body">
                         <div class="about-section">
                             <h4>Acerca de WIBCP</h4>
                             <p>WIBCP (Smart Call Center Tool) es una herramienta inteligente diseñada para optimizar el trabajo diario en call centers, facilitando el control automático de tiempos de espera, detección por voz en español, gestión de imágenes con tecnología Blob, integración con Genesys Cloud y sistema de notas inteligentes. Fue desarrollado por mi <strong> <a class="ftx lkme" href="https://wtaype.github.io/" target="_blank">@wilder.taype</a> </strong>, creado con el fin de apoyar a mis compañeros brindando un apoyo más <em>rápido, inteligente y eficiente</em> en entornos profesionales.</p>
-                        </div>
-                        
+                        </div>                        
                         <div class="features-section">
                             <h4>Características Principales</h4>
                             <div class="features-grid">
                                 <div class="feature-item">🎤 Detección de voz automática</div>
-                                <div class="feature-item">⏱️ Timer inteligente 60 segundos</div>
-                                <div class="feature-item">☁️ Integración Genesys Cloud</div>
-                                <div class="feature-item">🖼️ Gestión de imágenes Blob</div>
+                                <div class="feature-item">&#9201;&#65039; Timer inteligente 60 segundos</div>
+                                <div class="feature-item">&#9729;&#65039; Integración Genesys Cloud</div>
+                                <div class="feature-item">🖼&#65039; Gestión de imágenes Blob</div>
                                 <div class="feature-item">📝 Notas con autosave</div>
                                 <div class="feature-item">📱 Título dinámico en tiempo real</div>
                             </div>
-                        </div>
-                        
+                        </div>                        
                         <div class="versions-section">
                             <h4>Versión Actual</h4>
                             <p><strong>WIBCP v2.2 Smart</strong> - Versión completa 2025 con todas las características inteligentes</p>
-                        </div>
-                        
+                        </div>                        
                         <div class="privacy-section">
                             <h4>Política de Privacidad y Seguridad</h4>
                             <p class="privacy-text">Todos los datos ingresados se almacenan localmente en el dispositivo del usuario, garantizando la privacidad al no compartirse con terceros en ningún caso. Se recomienda proteger la información almacenada y utilizar "WIBCP" exclusivamente con fines profesionales en entornos de call center. La aplicación está implementada con funciones de seguridad que incluyen botones de reset y limpieza para eliminar los datos almacenados automáticamente, cleanup de Blob URLs, gestión inteligente de memoria y detección de navegador optimizada, asegurando que toda la información se mantenga segura y privada en todo momento.</p>
-                        </div>
-                        
+                        </div>                        
                         <button class="understand-btn" onclick="app.dismissLightAboutModal()">ENTENDIDO</button>
                     </div>
                 </div>
@@ -4219,7 +2903,7 @@ $.extend(MIBCPApp.prototype, {
         
         $('body').prepend(aboutModalHtml);
         
-        console.log('ℹ️ WIBCP Real Project Modal shown by @wtaype');
+        console.log('ℹ&#65039; WIBCP Real Project Modal shown by @wtaype');
     },
     
     dismissLightAboutModal() {
@@ -4227,7 +2911,7 @@ $.extend(MIBCPApp.prototype, {
             $('#lightAboutModal').remove();
         });
         
-        console.log('ℹ️ WIBCP Modal dismissed by @wtaype');
+        console.log('ℹ&#65039; WIBCP Modal dismissed by @wtaype');
     }
 });
 
@@ -4238,263 +2922,9 @@ $(document).ready(() => {
     }
 });
 
-// Updated styles with features grid
-$('<style>').html(`
-    /* Light About Modal - Fixed Position */
-    .light-about-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        z-index: 6000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: lightModalFadeIn 0.3s ease-out;
-    }
-    
-    .light-modal-content {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 20px;
-        width: 90%;
-        max-width: 650px;
-        max-height: 85vh;
-        overflow-y: auto;
-        box-shadow: 
-            0 20px 50px rgba(0, 0, 0, 0.1),
-            0 10px 25px rgba(0, 0, 0, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        animation: lightModalSlideUp 0.4s ease-out;
-    }
-    
-    .light-modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1.5rem 1.5rem 1rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    .modal-icon {
-        font-size: 1.8rem;
-        margin-right: 0.75rem;
-    }
-    
-    .light-modal-header h3 {
-        color: #2d3748;
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 700;
-        flex: 1;
-    }
-    
-    .close-btn {
-        background: rgba(239, 68, 68, 0.1);
-        color: #e53e3e;
-        border: none;
-        border-radius: 12px;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 1.2rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .close-btn:hover {
-        background: rgba(239, 68, 68, 0.2);
-        transform: scale(1.1);
-    }
-    
-    .light-modal-body {
-        padding: 1.5rem;
-    }
-    
-    .about-section,
-    .features-section,
-    .versions-section,
-    .privacy-section {
-        margin-bottom: 1.5rem;
-    }
-    
-    .light-modal-body h4 {
-        color: #2d3748;
-        font-size: 1rem;
-        font-weight: 700;
-        margin: 0 0 0.75rem 0;
-        border-bottom: 2px solid rgba(102, 126, 234, 0.2);
-        padding-bottom: 0.25rem;
-    }
-    
-    .light-modal-body p {
-        color: #4a5568;
-        line-height: 1.5;
-        margin-bottom: 0.75rem;
-        font-size: 0.9rem;
-    }
-    
-    .light-modal-body em {
-        color: #3182ce;
-        font-style: italic;
-        font-weight: 600;
-    }
-    
-    .light-modal-body strong {
-        color: #2d3748;
-        font-weight: 700;
-    }
-    
-    /* Features Grid */
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 0.75rem;
-        margin-top: 0.5rem;
-    }
-    
-    .feature-item {
-        background: linear-gradient(135deg, 
-            rgba(102, 126, 234, 0.1) 0%, 
-            rgba(59, 130, 246, 0.1) 50%, 
-            rgba(16, 185, 129, 0.1) 100%);
-        color: #2d3748;
-        padding: 0.75rem;
-        border-radius: 10px;
-        text-align: center;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border: 1px solid rgba(102, 126, 234, 0.2);
-        backdrop-filter: blur(10px);
-        transition: all 0.2s ease;
-    }
-    
-    .feature-item:hover {
-        background: linear-gradient(135deg, 
-            rgba(102, 126, 234, 0.2) 0%, 
-            rgba(59, 130, 246, 0.2) 50%, 
-            rgba(16, 185, 129, 0.2) 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-    }
-    
-    .privacy-text {
-        font-size: 0.85rem !important;
-        color: #4a5568 !important;
-        line-height: 1.5 !important;
-        text-align: justify;
-        margin-bottom: 0 !important;
-    }
-    
-    .understand-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 0.875rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        cursor: pointer;
-        width: 100%;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        margin-top: 1.5rem;
-    }
-    
-    .understand-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        background: linear-gradient(135deg, #5a67d8 0%, #667eea 100%);
-    }
-    
-    @keyframes lightModalFadeIn {
-        from { 
-            opacity: 0; 
-            backdrop-filter: blur(0px);
-        }
-        to { 
-            opacity: 1; 
-            backdrop-filter: blur(20px);
-        }
-    }
-    
-    @keyframes lightModalSlideUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-    
-    /* Custom scrollbar */
-    .light-modal-content::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    .light-modal-content::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.05);
-        border-radius: 4px;
-    }
-    
-    .light-modal-content::-webkit-scrollbar-thumb {
-        background: rgba(102, 126, 234, 0.4);
-        border-radius: 4px;
-    }
-    
-    .light-modal-content::-webkit-scrollbar-thumb:hover {
-        background: rgba(102, 126, 234, 0.6);
-    }
-    
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-        .light-modal-content {
-            width: 95%;
-            margin: 1rem;
-            max-height: 90vh;
-        }
-        
-        .light-modal-header,
-        .light-modal-body {
-            padding: 1rem;
-        }
-        
-        .features-grid {
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
-        }
-        
-        .feature-item {
-            font-size: 0.8rem;
-            padding: 0.5rem;
-        }
-        
-        .light-modal-body h4 {
-            font-size: 0.95rem;
-        }
-        
-        .light-modal-body p,
-        .privacy-text {
-            font-size: 0.85rem !important;
-        }
-    }
-`).appendTo('head');
 $('.wty').text(new Date().getFullYear());
 
-console.log('🎯 WIBCP Real Project About Modal loaded! ✨ by @wtaype');
+console.log('🎯 WIBCP Real Project About Modal loaded! &#10024; by @wtaype');
 console.log('📅 Updated: 2025-09-28 17:49:27 UTC');
 console.log('👤 User: wtaype');
 console.log('🚀 Project: WIBCP Smart Call Center Tool');
