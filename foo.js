@@ -11,7 +11,7 @@ let link = 'https://wtaype.github.io/';
 let version = 'v10'; 
 /** ACTUALIZACION TAG version dia hora   [START]  
 
-git add . ; git commit -m "Actualizacion Principal v10.10.39"
+git add . ; git commit -m "Actualizacion Principal v10.18.35""
 git push origin main
 
 // Actualizar despues de main- 
