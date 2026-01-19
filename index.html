@@ -1,233 +1,83 @@
-<!doctype html>
-<html lang="es"><head>
-<meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="es">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>WiBCP - Herramienta Call Center v15</title>
-<meta name="description" content="MIcp - Herramienta para detección automática de voz y utilidades como notepad. Optimiza tus procesos de call center con una plataforma moderna.">
-<meta name="keywords" content="call center, detección de voz, notepad, productividad, MIcp">
-
-<link href="/vite.svg" rel="icon" type="image/x-icon">
-<link rel="stylesheet" href="./style.css"/>
-<script type="module" src="./main.js" defer></script>
+<title>WiBCP - Cronómetro Profesional</title>
+<link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="main.css">
 </head>
 <body>
-  <!--DIOS ES BUENO[START V11 6486292898283089667 https://wtaype.github.io/wiilogo ]-->
-<!-- Header -->
-<header class='glass-header'>
-<div class='container'>
-<div class='header-content'>
-<div class='logo'>
-<i class='fas fa-headset'></i>
+<!--DIOS ES BUENO[START V11 8004561862437404674  ]-->
+<header class="glass-header">
+<div class="container">
+<div class="header-content">
+<div class="logo">
+<i class="fas fa-stopwatch"></i>
 <h1>WiBCP</h1>
-<p>"Más que Atención, una Experiencia"</p>
 </div>
 </div>
 </div>
 </header>
-<!-- Main Content -->
-<main class='main-content'>
-<div class='container'>
-<!-- Timer and Configuration Section -->
-<section class='main-grid'>
-<!-- Left Side: Timer (65%) -->
-<div class='timer-section glass-card'>
-<div class='timer-container'>
-<div class='timer-circle'>
-<svg class='progress-ring' height='200' width='200'>
-<circle class='progress-ring-circle' cx='100' cy='100' fill='transparent' r='80' stroke-width='8'></circle>
+<main class="main-content">
+<div class="container">
+<div class="content-wrapper">
+<section class="glass-card timer-section">
+<div class="timer-container">
+<div class="timer-circle">
+<svg class="progress-ring" width="200" height="200">
+<circle class="progress-ring-circle" stroke-width="8" fill="transparent" r="80" cx="100" cy="100"/>
 </svg>
-<div class='timer-display'>
-<span id='timerValue'>60</span>
-<small>segundos</small>
+<div class="timer-display">
+<span id="timerValue">00:00</span>
+<small>minutos</small>
 </div>
 </div>
-<div class='timer-status'>
-<p id='timerStatus'>Listo para iniciar</p>
+<div class="timer-status">
+<span id="timerStatus">Listo para iniciar</span>
 </div>
-<div class='timer-controls'>
-<button class='btn-primary' id='startTimer'>
-<i class='fas fa-play'></i>
-<span>Iniciar</span>
+<div class="timer-controls">
+<button id="startBtn" class="btn-primary">
+<i class="fas fa-play"></i> Iniciar
 </button>
-<button class='btn-warning' id='stopTimer'>
-<i class='fas fa-stop'></i>
-<span>Detener</span>
+<button id="stopBtn" class="btn-warning" disabled>
+<i class="fas fa-pause"></i> Pausar
 </button>
-<button class='btn-secondary' id='resetTimer'>
-<i class='fas fa-refresh'></i>
-<span>Reset</span>
+<button id="resetBtn" class="btn-danger" disabled>
+<i class="fas fa-redo"></i> Reiniciar
 </button>
-</div>
-</div>
-</div>
-<!-- Right Side: Configuration and History (35%) -->
-<div class='config-section glass-card'>
-<!-- Configuration -->
-<div class='config-panel'>
-<h3><i class='fas fa-cog'></i> Configuración</h3>
-<div class='detection-controls'>
-<button class='btn-detection' id='toggleDetection'>
-<i class='fas fa-microphone'></i>
-<span>Detección Auto</span>
-</button>
-</div>
-<div class='phrases-info'>
-<div class='phrases-group'>
-<h4><i class='fas fa-play-circle text-success'></i> Activar</h4>
-<div class='phrases-display' id='startPhrasesList'>
-<!-- Dynamic content -->
-</div>
-</div>
-<div class='phrases-group'>
-<h4><i class='fas fa-stop-circle text-danger'></i> Detener</h4>
-<div class='phrases-display' id='stopPhrasesList'>
-<!-- Dynamic content -->
-</div>
-</div>
-</div>
-</div>
-<!-- History -->
-<div class='history-panel'>
-<h3><i class='fas fa-history'></i> Historial de Esperas</h3>
-<div class='history-list' id='historyList'>
-<!-- Dynamic content -->
-</div>
 </div>
 </div>
 </section>
-<!-- Genesys Cloud Section -->
-<section class='genesys-section glass-card'>
-<h3><i class='fas fa-cloud'></i> Genesys Cloud</h3>
-<div class='genesys-container'>
-<div class='genesys-input-group'>
-<input class='genesys-input' id='genesysUrl' placeholder='https://your-genesys-domain.com' type='url' value=''/>
-<button class='btn-primary genesys-btn' id='openGenesys'>
-<i class='fas fa-external-link-alt'></i>
-<span>Abrir Genesys Cloud</span>
+<section class="glass-card genesys-section">
+<h3><i class="fas fa-link"></i> Genesys Cloud</h3>
+<div class="genesys-container">
+<div class="genesys-input-group">
+<input type="text" id="genesysInput" class="genesys-input" placeholder="Pega la URL de conversación aquí...">
+<button id="genesysBtn" class="genesys-btn btn-primary">
+<i class="fas fa-external-link-alt"></i> Abrir
 </button>
 </div>
-<div class='genesys-info'>
-<small><i class='fas fa-info-circle'></i> Se abrirá en ventana optimizada para agentes</small>
+<div class="genesys-info">
+<span><i class="fas fa-info-circle"></i> Acceso rápido a conversaciones de Genesys</span>
 </div>
 </div>
 </section>
-<!-- Notes and Images Section -->
-<section class='content-grid'>
-<!-- Notes (40%) -->
-<div class='notes-section glass-card'>
-<h3><i class='fas fa-sticky-note'></i> Notas Rápidas</h3>
-<div class='notes-container'>
-<textarea id='notesArea' placeholder='Escribe notas rápidas...'></textarea>
-<div class='save-indicator'>
-<span id='saveStatus'>Guardado</span>
-</div>
-</div>
-</div>
-<!-- Images (60%) -->
-<div class='images-section glass-card'>
-<h3><i class='fas fa-images'></i> Imágenes</h3>
-<div class='image-boxes'>
-<div class='image-box' data-slot='1'>
-<div class='image-dropzone'>
-<i class='fas fa-cloud-upload-alt'></i>
-<p>Imagen 1</p>
-<small>Pegar, Arrastrar o Subir</small>
-</div>
-<input accept='image/*' class='image-input' type='file'/>
-<div class='image-preview'></div>
-<div class='image-controls'>
-<button class='btn-save' onclick='app.saveImage(1)'>
-<i class='fas fa-save'></i>
-</button>
-<button class='btn-delete' onclick='app.deleteImage(1)'>
-<i class='fas fa-trash'></i>
-</button>
-<a class='btn-open image-link' data-slot='1' href='#' style='display: none;' target='_blank'>
-<i class='fas fa-external-link-alt'></i>
-</a>
-</div>
-</div>
-<div class='image-box' data-slot='2'>
-<div class='image-dropzone'>
-<i class='fas fa-cloud-upload-alt'></i>
-<p>Imagen 2</p>
-<small>Pegar, Arrastrar o Subir</small>
-</div>
-<input accept='image/*' class='image-input' type='file'/>
-<div class='image-preview'></div>
-<div class='image-controls'>
-<button class='btn-save' onclick='app.saveImage(2)'>
-<i class='fas fa-save'></i>
-</button>
-<button class='btn-delete' onclick='app.deleteImage(2)'>
-<i class='fas fa-trash'></i>
-</button>
-<a class='btn-open image-link' data-slot='2' href='#' style='display: none;' target='_blank'>
-<i class='fas fa-external-link-alt'></i>
-</a>
-</div>
-</div>
-<div class='image-box' data-slot='3'>
-<div class='image-dropzone'>
-<i class='fas fa-cloud-upload-alt'></i>
-<p>Imagen 3</p>
-<small>Pegar, Arrastrar o Subir</small>
-</div>
-<input accept='image/*' class='image-input' type='file'/>
-<div class='image-preview'></div>
-<div class='image-controls'>
-<button class='btn-save' onclick='app.saveImage(3)'>
-<i class='fas fa-save'></i>
-</button>
-<button class='btn-delete' onclick='app.deleteImage(3)'>
-<i class='fas fa-trash'></i>
-</button>
-<a class='btn-open image-link' data-slot='3' href='#' style='display: none;' target='_blank'>
-<i class='fas fa-external-link-alt'></i>
-</a>
-</div>
-</div>
-<div class='image-box' data-slot='4'>
-<div class='image-dropzone'>
-<i class='fas fa-cloud-upload-alt'></i>
-<p>Imagen 4</p>
-<small>Pegar, Arrastrar o Subir</small>
-</div>
-<input accept='image/*' class='image-input' type='file'/>
-<div class='image-preview'></div>
-<div class='image-controls'>
-<button class='btn-save' onclick='app.saveImage(4)'>
-<i class='fas fa-save'></i>
-</button>
-<button class='btn-delete' onclick='app.deleteImage(4)'>
-<i class='fas fa-trash'></i>
-</button>
-<a class='btn-open image-link' data-slot='4' href='#' style='display: none;' target='_blank'>
-<i class='fas fa-external-link-alt'></i>
-</a>
-</div>
-</div>
-</div>
-</div>
+<section class="glass-card history-panel">
+<h3><i class="fas fa-history"></i> Historial de Sesiones</h3>
+<div id="historyList" class="history-list"></div>
 </section>
-<!-- Global Controls -->
-<section class='global-controls'>
-<button class='btn-danger' id='clearAllData'>
-<i class='fas fa-trash-alt'></i>
-<span>Eliminar Todos los Datos</span>
-</button>
-</section>
+</div>
 </div>
 </main>
-<!-- Footer -->
-<footer class='glass-footer'>
-<div class='container'>
-<p>Creado con &#10084;&#65039; by <a class='ftx lkme' href='https://wtaype.github.io/' target='_blank'>@wilder.taype</a> 2025 - <span class='wty'>2025</span> | <a href='#about'>Acerca del app</a> | Actualizado: 28/09/2025, 14:03:08</p>
+<footer class="glass-footer">
+<div class="container">
+<p>&copy; 2026 WiBCP - Cronómetro Profesional | Desarrollado con 💙</p>
 </div>
 </footer>
-<!--DIOS ES BUENO SIEMPRE[END]-->
-
+<!--DIOS ES BUENO[END V11 8004561862437404674  ]-->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
